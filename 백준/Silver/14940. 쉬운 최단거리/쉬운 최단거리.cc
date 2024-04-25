@@ -32,7 +32,6 @@ int main()
                 ans[i][j] = -1;
         }
 
-    ans[a][b] = 0;
     chk[a][b] = true;
     q.push({a, b});
 

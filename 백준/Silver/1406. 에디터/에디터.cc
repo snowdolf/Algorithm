@@ -39,7 +39,8 @@ int main()
             break;
         case 'P':
             cin >> c;
-            li.insert(it, c);
+            it = li.insert(it, c);
+            it++;
             break;
         default:
             break;

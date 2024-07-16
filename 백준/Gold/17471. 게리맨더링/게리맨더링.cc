@@ -6,107 +6,83 @@
 using namespace std;
 
 int n, p[15], q[15], a, b, ans = -1;
-vector<int> vec[15];
-bool chk[15];
+vector<int> adj[15];
+bool visited[15];
 queue<int> que;
 
-void g(int x, int y){
-    for(int i = 1; i <= n; i++)chk[i] = false;
-    while(!que.empty())que.pop();
-    
-    int target = q[1];
-    int targetCount1 = target > 0 ? x : y;
+void bfs(int start, int target, int& cnt, int& sum, int targetCount) {
+    fill(begin(visited), end(visited), false);
+    while (!que.empty()) que.pop();
 
-    int cnt1 = 0;
-    int sum1 = 0;
+    cnt = 0;
+    sum = 0;
 
-    que.push(1);
-    chk[1] = true;
-    cnt1++;
-    sum1 += p[1];
-    while(!que.empty()){
-        int qf = que.front();
+    que.push(start);
+    visited[start] = true;
+    cnt++;
+    sum += p[start];
+
+    while (!que.empty()) {
+        int curr = que.front();
         que.pop();
 
-        for(auto i : vec[qf]){
-            if(chk[i])continue;
-            if(q[i] != target)continue;
-            que.push(i);
-            chk[i] = true;
-            cnt1++;
-            sum1 += p[i];
+        for (int neighbor : adj[curr]) {
+            if (visited[neighbor] || q[neighbor] != target) continue;
+            que.push(neighbor);
+            visited[neighbor] = true;
+            cnt++;
+            sum += p[neighbor];
         }
     }
-
-    target *= -1;
-    int target2Index = 2;
-    while(q[target2Index] != target)target2Index++;
-    int targetCount2 = target > 0 ? x : y;
-
-    int cnt2 = 0;
-    int sum2 = 0;
-
-    que.push(target2Index);
-    chk[target2Index] = true;
-    cnt2++;
-    sum2 += p[target2Index];
-    while(!que.empty()){
-        int qf = que.front();
-        que.pop();
-
-        for(auto i : vec[qf]){
-            if(chk[i])continue;
-            if(q[i] != target)continue;
-            que.push(i);
-            chk[i] = true;
-            cnt2++;
-            sum2 += p[i];
-        }
-    }
-
-    if(cnt1 == targetCount1 && cnt2 == targetCount2){
-        int res = sum1 > sum2 ? sum1 - sum2 : sum2 - sum1;
-        if(ans < 0)ans = res;
-        else ans = min(ans, res);
-    }
-
-    return;
 }
 
-void f(int x, int y, int z){
-    if(x == n){
-        if(y && z)g(y, z);
+void calculateDifference(int x, int y) {
+    int cnt1, sum1, cnt2, sum2;
+    bfs(1, q[1], cnt1, sum1, x);
+
+    int target2 = -q[1];
+    int target2Index = 2;
+    while (q[target2Index] != target2) target2Index++;
+    bfs(target2Index, target2, cnt2, sum2, y);
+
+    if (cnt1 == x && cnt2 == y) {
+        int diff = abs(sum1 - sum2);
+        if (ans < 0) ans = diff;
+        else ans = min(ans, diff);
+    }
+}
+
+void partition(int idx, int group1Count, int group2Count) {
+    if (idx == n) {
+        if (group1Count && group2Count) calculateDifference(group1Count, group2Count);
         return;
     }
 
-    q[x + 1] = 1;
-    f(x + 1, y + 1, z);
-    q[x + 1] = -1;
-    f(x + 1, y, z + 1);
+    q[idx + 1] = 1;
+    partition(idx + 1, group1Count + 1, group2Count);
 
-    return;
+    q[idx + 1] = -1;
+    partition(idx + 1, group1Count, group2Count + 1);
 }
 
-int main()
-{
+int main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
 
     cin >> n;
-    for(int i = 1; i <= n; i++)cin >> p[i];
+    for (int i = 1; i <= n; i++) cin >> p[i];
 
-    for(int i = 1; i <= n; i++){
+    for (int i = 1; i <= n; i++) {
         cin >> a;
-        while(a--){
+        while (a--) {
             cin >> b;
-            vec[i].push_back(b);
+            adj[i].push_back(b);
         }
     }
 
     q[1] = 1;
-    f(1, 1, 0);
+    partition(1, 1, 0);
 
     cout << ans;
-
     return 0;
 }

@@ -4,23 +4,31 @@
 
 using namespace std;
 
+const int MAX_N = 1003001;
+
 int n;
-int isPrime[1003002];
+bool isPrime[MAX_N + 1];
 
 void initPrime()
 {
-    isPrime[1] = -1;
-    for(int i = 2; i <= 1003001; i++){
-        if(isPrime[i] == 0){
-            isPrime[i] = 1;
-            for(int j = 2 * i; j <= 1003001; j += i){
-                isPrime[j] = -1;
+    fill(isPrime, isPrime + MAX_N + 1, 1);
+
+    isPrime[0] = isPrime[1] = 0;
+
+    for (int i = 2; i * i <= MAX_N; i++)
+    {
+        if (isPrime[i])
+        {
+            for (long long j = i * i; j <= MAX_N; j += i)
+            {
+                isPrime[j] = 0;
             }
         }
     }
 }
 
-bool isPalindrome(int x){
+bool isPalindrome(int x)
+{
     string str = to_string(x);
 
     string streverse = str;
@@ -37,8 +45,10 @@ int main()
     cin >> n;
     initPrime();
 
-    for(int i = 2;; i++){
-        if(i >= n && isPrime[i] == 1 && isPalindrome(i)){
+    for (int i = n;; i++)
+    {
+        if (isPrime[i] == 1 && isPalindrome(i))
+        {
             cout << i;
             break;
         }

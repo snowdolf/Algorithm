@@ -21,6 +21,15 @@ void init()
     return;
 }
 
+void update()
+{
+    while (!maxpq.empty() && !cntmp[maxpq.top()])
+        maxpq.pop();
+    while (!minpq.empty() && !cntmp[minpq.top()])
+        minpq.pop();
+    return;
+}
+
 int main()
 {
     ios::sync_with_stdio(0);
@@ -58,10 +67,7 @@ int main()
                     minpq.pop();
                 }
             }
-            while (!maxpq.empty() && !cntmp[maxpq.top()])
-                    maxpq.pop();
-            while (!minpq.empty() && !cntmp[minpq.top()])
-                    minpq.pop();
+            update();
         }
 
         if (maxpq.empty() || minpq.empty())

@@ -12,10 +12,10 @@ int main()
     cin >> t;
     while(t--){
         cin >> m >> n >> x >> y;
+        y %= n;
         ans = -1;
         for(int i = 0; i < n; i++){
             int cnt = m * i + x;
-            y %= n;
             if(cnt % n == y){
                 ans = cnt;
                 break;

@@ -12,7 +12,7 @@
 
 ### 제출 일자
 
-2024년 8월 21일 10:46:08
+2024년 8월 21일 10:50:49
 
 ### 문제 설명
 
@@ -24,7 +24,7 @@
 
 <p>파이프는 회전시킬 수 있으며, 아래와 같이 3가지 방향이 가능하다.</p>
 
-<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/b29efafa-dbae-4522-809c-76d5c184a231/-/preview/" style="width: 427px; height: 136px;"></p>
+<p style="text-align: center;"><img alt="" src="" style="width: 427px; height: 136px;"></p>
 
 <p>파이프는 매우 무겁기 때문에, 유현이는 파이프를 밀어서 이동시키려고 한다. 벽에는 새로운 벽지를 발랐기 때문에, 파이프가 벽을 긁으면 안 된다. 즉, 파이프는 항상 빈 칸만 차지해야 한다.</p>
 
@@ -38,7 +38,7 @@
 
 <p style="text-align: center;">가로</p>
 
-<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/045d071f-0ea2-4ab5-a8db-61c215e7e7b7/-/preview/" style="width: 579px; height: 203px;"></p>
+<p style="text-align: center;"><img alt="" src="" style="width: 579px; height: 203px;"></p>
 
 <p style="text-align: center;">세로</p>
 

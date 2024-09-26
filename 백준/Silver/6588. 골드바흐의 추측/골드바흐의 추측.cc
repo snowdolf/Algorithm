@@ -30,7 +30,7 @@ int main()
 
         bool cnt = false;
 
-        for (int i = 3; i <= n / 2; i++)
+        for (int i = 3; i <= n / 2; i += 2)
         {
             if (!chk[i] && !chk[n - i])
             {

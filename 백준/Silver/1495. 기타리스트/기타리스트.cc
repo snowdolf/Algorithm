@@ -1,9 +1,12 @@
 #include <iostream>
+#include <vector>
+#include <algorithm>
 
 using namespace std;
 
-int n, s, m, vol[55];
-bool chk[55][1005];
+int n, s, m;
+vector<int> vol;
+vector<bool> cur, nxt;
 
 int main()
 {
@@ -11,26 +14,35 @@ int main()
     cin.tie(0);
 
     cin >> n >> s >> m;
+
+    vol.resize(n + 1);
+    cur.resize(m + 1, false);
+    nxt.resize(m + 1, false);
+
     for(int i = 1; i <= n; i++)cin >> vol[i];
 
-    chk[0][s] = true;
+    cur[s] = true;
 
     for(int i = 1; i <= n; i++){
+        fill(nxt.begin(), nxt.end(), false);
+
         for(int j = 0; j <= m; j++){
-            if(chk[i - 1][j]){
+            if(cur[j]){
                 if((j + vol[i]) <= m){
-                    chk[i][j + vol[i]] = true;
+                    nxt[j + vol[i]] = true;
                 }
                 if((j - vol[i]) >= 0){
-                    chk[i][j - vol[i]] = true;
+                    nxt[j - vol[i]] = true;
                 }
             }
         }
+
+        swap(cur, nxt);
     }
 
     int ans = -1;
     for(int i = m; i >= 0; i--){
-        if(chk[n][i]){
+        if(cur[i]){
             ans = i;
             break;
         }

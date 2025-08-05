@@ -39,16 +39,15 @@ int main()
 
             while (!q.empty())
             {
-                pair<int, int> qf = q.front();
-                q.pop();
-                for (auto j : adj[qf.first])
+                auto [cur, prev] = q.front(); q.pop();
+                for (auto j : adj[cur])
                 {
                     if (node[j] == -1)
                     {
-                        q.push({j, qf.first});
+                        q.push({j, cur});
                         node[j] = i;
                     }
-                    else if (qf.second != j)
+                    else if (prev != j)
                     {
                         isTree = false;
                     }

@@ -5,6 +5,15 @@
 
 using namespace std;
 
+struct Point
+{
+    int x, y;
+};
+
+const int INF = 1e5;
+const int dx[4] = {-1, 1, 0, 0};
+const int dy[4] = {0, 0, -1, 1};
+
 int main()
 {
     ios::sync_with_stdio(0);
@@ -25,15 +34,15 @@ int main()
     }
 
     queue<pair<int, int>> q;
+    int islandCount = 0;
 
-    int islandNum = 1;
     for (int i = 0; i < n; i++)
     {
         for (int j = 0; j < m; j++)
         {
             if (map[i][j] == 0)
             {
-                map[i][j] = islandNum;
+                map[i][j] = ++islandCount;
                 q.push({i, j});
 
                 while (!q.empty())
@@ -41,57 +50,49 @@ int main()
                     auto [x, y] = q.front();
                     q.pop();
 
-                    for (int dx = -1; dx <= 1; dx++)
+                    for (int dir = 0; dir < 4; dir++)
                     {
-                        for (int dy = -1; dy <= 1; dy++)
+                        int nx = x + dx[dir];
+                        int ny = y + dy[dir];
+                        if (nx < 0 || nx >= n || ny < 0 || ny >= m) continue;
+
+                        if (map[nx][ny] == 0)
                         {
-                            if (abs(dx) + abs(dy) != 1) continue;
-                            int nx = x + dx;
-                            int ny = y + dy;
-                            if (nx < 0 || nx >= n || ny < 0 || ny >= m) continue;
-                            if (map[nx][ny] == 0)
-                            {
-                                map[nx][ny] = islandNum;
-                                q.push({nx, ny});
-                            }
+                            map[nx][ny] = islandCount;
+                            q.push({nx, ny});
                         }
                     }
                 }
-
-                islandNum++;
             }
         }
     }
-    islandNum--;
 
-    vector<vector<int>> dist(islandNum + 1, vector<int>(islandNum + 1, 1e5));
+    vector<vector<int>> dist(islandCount + 1, vector<int>(islandCount + 1, INF));
     for (int i = 0; i < n; i++)
     {
         for (int j = 0; j < m; j++)
         {
             if (map[i][j] > 0)
             {
-                for (int dx = -1; dx <= 1; dx++)
+                int u = map[i][j];
+                for (int dir = 0; dir < 4; dir++)
                 {
-                    for (int dy = -1; dy <= 1; dy++)
+                    for (int k = 1;; k++)
                     {
-                        if (abs(dx) + abs(dy) != 1) continue;
-                        for (int k = 1;; k++)
-                        {
-                            int nx = i + dx * k;
-                            int ny = j + dy * k;
-                            if (nx < 0 || nx >= n || ny < 0 || ny >= m) break;
+                        int nx = i + dx[dir] * k;
+                        int ny = j + dy[dir] * k;
+                        if (nx < 0 || nx >= n || ny < 0 || ny >= m) break;
 
-                            if (map[nx][ny] == map[i][j]) break;
-                            else if (map[nx][ny] > 0)
+                        int v = map[nx][ny];
+                        if (v == u) break;
+                        if (v > 0)
+                        {
+                            if (k - 1 >= 2)
                             {
-                                if (k >= 3)
-                                {
-                                    dist[map[nx][ny]][map[i][j]] = min(dist[map[nx][ny]][map[i][j]], k - 1);
-                                    dist[map[i][j]][map[nx][ny]] = min(dist[map[i][j]][map[nx][ny]], k - 1);
-                                }
-                                break;
+                                dist[u][v] = min(dist[u][v], k - 1);
+                                dist[v][u] = min(dist[v][u], k - 1);
                             }
+                            break;
                         }
                     }
                 }
@@ -99,9 +100,10 @@ int main()
         }
     }
 
-    vector<bool> visited(islandNum + 1, false);
+    vector<bool> visited(islandCount + 1, false);
     priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
     int ans = 0;
+    int visitedCount = 0;
 
     pq.push({0, 1});
     while (!pq.empty())
@@ -113,17 +115,18 @@ int main()
 
         visited[u] = true;
         ans += d;
+        visitedCount++;
 
-        for (int v = 1; v <= islandNum; v++)
+        for (int v = 1; v <= islandCount; v++)
         {
-            if (!visited[v])
+            if (!visited[v] && dist[u][v] < INF)
             {
                 pq.push({dist[u][v], v});
             }
         }
     }
 
-    if (ans >= 1e5) ans = -1;
+    if (visitedCount < islandCount) ans = -1;
     cout << ans << '\n';
 
     return 0;

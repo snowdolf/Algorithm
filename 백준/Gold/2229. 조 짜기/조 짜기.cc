@@ -1,6 +1,5 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
 
 using namespace std;
 
@@ -16,18 +15,18 @@ int main()
     for (auto &x : score) cin >> x;
 
     vector<int> dp(n, 0);
-    for (int i = 1; i < n; i++)
+    for (int i = 0; i < n; i++)
     {
-        for (int j = 0; j < i; j++)
+        int minScore = score[i], maxScore = score[i];
+
+        for (int j = i; j >= 0; j--)
         {
-            int l = 10000, r = 0;
-            for (int k = j; k <= i; k++)
-            {
-                l = min(l, score[k]);
-                r = max(r, score[k]);
-            }
-            int tmp = r - l;
+            minScore = min(minScore, score[j]);
+            maxScore = max(maxScore, score[j]);
+
+            int tmp = maxScore - minScore;
             if (j > 0) tmp += dp[j - 1];
+
             dp[i] = max(dp[i], tmp);
         }
     }
